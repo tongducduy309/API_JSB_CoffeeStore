@@ -13,7 +13,8 @@ public class ApplicationConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")       // endpoint cần bật CORS
-                        .allowedOrigins("http://localhost:4200") // Angular app
+                        .allowedOrigins("http://localhost:4200")
+                        .allowedOrigins("https://caf-bay.vercel.app")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
