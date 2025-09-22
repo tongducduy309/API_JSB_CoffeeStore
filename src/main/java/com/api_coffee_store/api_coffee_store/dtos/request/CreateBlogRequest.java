@@ -1,7 +1,9 @@
 package com.api_coffee_store.api_coffee_store.dtos.request;
 
 import com.api_coffee_store.api_coffee_store.enums.Region;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,6 +20,9 @@ public record CreateBlogRequest(
 
     public record Box(
             @NotNull(message = "Index Box Is Required") Integer index,
-            String content
+            @Length(max = 255,message = "Maximum Length Is 65.535")
+            @Column(columnDefinition = "TEXT")
+            String content,
+            String section
     ) {}
 }

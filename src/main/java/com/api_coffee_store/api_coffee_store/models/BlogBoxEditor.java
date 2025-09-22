@@ -22,6 +22,9 @@ public class BlogBoxEditor {
 
     private Integer index;
 
+    private String section;
+
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)

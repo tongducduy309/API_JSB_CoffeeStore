@@ -66,6 +66,7 @@ public class BlogService {
             BlogBoxEditor blogBoxEditor = BlogBoxEditor.builder()
                     .index(box.index())
                     .content(box.content())
+                    .section(box.section())
                     .blog(blog)
                     .build();
             boxes.add(blogBoxEditor);

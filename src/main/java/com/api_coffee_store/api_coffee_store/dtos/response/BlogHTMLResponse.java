@@ -9,6 +9,7 @@ public record BlogHTMLResponse(
         String title,
         String subtitle,
         LocalDateTime createdAt,
+
         String content,
         Category category
 

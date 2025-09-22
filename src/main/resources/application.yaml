@@ -1,22 +1,29 @@
 server:
   port: ${PORT:8080}
+
 spring:
   application:
     name: api_coffee_store
 
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximumPoolSize: ${SPRING_DATASOURCE_HIKARI_MAXIMUMPOOLSIZE:5}
+      minimumIdle: ${SPRING_DATASOURCE_HIKARI_MINIMUMIDLE:1}
+
   jpa:
     hibernate:
       ddl-auto: update
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
-      hibernate:
-        format_sql: true
+      hibernate.format_sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
 management:
   endpoints.web.exposure.include: health,info
 
-
 jwt:
-  secret: BxsmVbElz3wP7iqRPIxnLSCuc1xJ890ymIPrvtkheXny6NZtiaWzIHOefrBoKIp5
-  expiration-ms: 8760
+  secret: ${JWT_SECRET:change-me}
+  expiration-ms: ${JWT_EXPIRATION_MS:8760}
