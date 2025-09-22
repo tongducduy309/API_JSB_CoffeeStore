@@ -1,22 +1,24 @@
-# ---- build stage ----
+# ==== BUILD STAGE ====
 FROM eclipse-temurin:24-jdk AS build
 WORKDIR /app
 COPY . .
-# nếu dùng Maven:
-RUN ./mvnw -q -DskipTests package
-# nếu dùng Gradle (thay dòng trên):
-# RUN ./gradlew -q -x test bootJar
 
-# ---- run stage ----
+# Fix CRLF nếu clone từ Windows + cấp quyền thực thi cho mvnw
+RUN sed -i 's/\r$//' mvnw && chmod +x mvnw
+
+# Build bằng Maven Wrapper
+RUN ./mvnw -q -DskipTests clean package
+
+# ==== RUNTIME STAGE ====
 FROM eclipse-temurin:24-jre
+ENV TZ=Asia/Ho_Chi_Minh \
+    JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=70.0"
+
 WORKDIR /app
-ARG JAR=target/*.jar
-# với Gradle, đổi path sang build/libs/*.jar
-COPY --from=build /app/${JAR} app.jar
+COPY --from=build /app/target/*.jar app.jar
 
 # Render sẽ inject PORT; Spring Boot cần server.port
 ENV PORT=8080
-ENV JAVA_OPTS="-Xms256m -Xmx512m"
-
 EXPOSE 8080
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -Dserver.port=${PORT} -jar app.jar"]
+
+ENTRYPOINT ["sh","-c","java $JAVA_OPTS -Dserver.port=${PORT} -jar app.jar"]
