@@ -2,7 +2,6 @@
 FROM eclipse-temurin:24-jdk AS build
 WORKDIR /app
 COPY . .
-COPY .env .env
 # Fix CRLF nếu clone từ Windows + cấp quyền thực thi cho mvnw
 RUN sed -i 's/\r$//' mvnw && chmod +x mvnw
 
