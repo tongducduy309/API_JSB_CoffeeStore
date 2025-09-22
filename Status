@@ -1,0 +1,29 @@
+Nhóm 2xx (Thành công)
+
+200 OK → Request thành công (GET, PUT, DELETE).
+
+201 Created → Tạo mới resource thành công (POST).
+
+204 No Content → Thành công nhưng không có dữ liệu trả về (ví dụ DELETE).
+
+⚠️ Nhóm 4xx (Lỗi phía client)
+
+400 Bad Request → Dữ liệu request sai format, thiếu field…
+
+401 Unauthorized → Chưa login hoặc token JWT sai/hết hạn.
+
+403 Forbidden → Có login nhưng không đủ quyền.
+
+404 Not Found → Không tìm thấy resource (ví dụ /users/123 không tồn tại).
+
+409 Conflict → Xung đột dữ liệu (ví dụ đăng ký email đã tồn tại).
+
+422 Unprocessable Entity → Dữ liệu hợp lệ về cú pháp nhưng không thỏa điều kiện nghiệp vụ.
+
+🚨 Nhóm 5xx (Lỗi phía server)
+
+500 Internal Server Error → Lỗi server chung.
+
+502 Bad Gateway → Proxy/Gateway nhận lỗi từ upstream.
+
+503 Service Unavailable → Server quá tải hoặc đang bảo trì.

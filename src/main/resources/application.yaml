@@ -1,0 +1,22 @@
+server:
+  port: ${PORT:8080}
+spring:
+  application:
+    name: api_coffee_store
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        format_sql: true
+
+management:
+  endpoints.web.exposure.include: health,info
+
+
+jwt:
+  secret: BxsmVbElz3wP7iqRPIxnLSCuc1xJ890ymIPrvtkheXny6NZtiaWzIHOefrBoKIp5
+  expiration-ms: 8760
