@@ -30,7 +30,7 @@ public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINT_POST = {"/api/v1/auth/token","/api/v1/auth/introspect","/api/v1/users",
     "/api/v1/reviews"};
-    private final String[] PUBLIC_ENDPOINT_GET = {"/api/v1/reviews","/api/v1/blogs/html/{slug}","/api/v1/products","/api/v1/blogs"};
+    private final String[] PUBLIC_ENDPOINT_GET = {"/api/v1/reviews","/api/v1/blogs/html/{slug}","/api/v1/products","/api/v1/blogs","/api/v1/files"};
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(request->
