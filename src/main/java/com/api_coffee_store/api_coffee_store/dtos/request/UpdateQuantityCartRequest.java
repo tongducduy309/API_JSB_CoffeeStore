@@ -9,7 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Setter
 @Getter
-public class CartPatchRequest {
+public class UpdateQuantityCartRequest {
     private String productVariantId;
     private Integer quantity;
 }

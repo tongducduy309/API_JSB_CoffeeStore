@@ -1,9 +1,7 @@
 package com.api_coffee_store.api_coffee_store.services;
 
-import com.api_coffee_store.api_coffee_store.dtos.request.CartPatchRequest;
+import com.api_coffee_store.api_coffee_store.dtos.request.UpdateQuantityCartRequest;
 import com.api_coffee_store.api_coffee_store.dtos.request.CartRequest;
-import com.api_coffee_store.api_coffee_store.dtos.request.ReviewRequest;
-import com.api_coffee_store.api_coffee_store.dtos.response.UserResponse;
 import com.api_coffee_store.api_coffee_store.enums.ErrorCode;
 import com.api_coffee_store.api_coffee_store.enums.SuccessCode;
 import com.api_coffee_store.api_coffee_store.exception.APIException;
@@ -12,12 +10,10 @@ import com.api_coffee_store.api_coffee_store.models.*;
 import com.api_coffee_store.api_coffee_store.repositories.CartRepository;
 import com.api_coffee_store.api_coffee_store.repositories.ProductRepository;
 import com.api_coffee_store.api_coffee_store.repositories.ProductVariantRepository;
-import com.api_coffee_store.api_coffee_store.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -93,7 +89,7 @@ public class CartService {
         );
     }
 
-    public ResponseEntity<ResponseObject> updateCart(String id, CartPatchRequest cartPatchRequest) throws APIException {
+    public ResponseEntity<ResponseObject> updateCart(String id, UpdateQuantityCartRequest cartPatchRequest) throws APIException {
         Cart cart = cartRepository.findById(id).orElseThrow(()->new APIException(ErrorCode.NOT_FOUND.getStatus(),
                 "Cannot Found Cart With Id = "+id,ErrorCode.NOT_FOUND.getHttpStatusCode()));
         if (cartPatchRequest.getProductVariantId()!=null) {
