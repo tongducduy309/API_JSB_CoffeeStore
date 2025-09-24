@@ -2,6 +2,8 @@ package com.api_coffee_store.api_coffee_store.services;
 
 import com.api_coffee_store.api_coffee_store.dtos.request.AuthenticationRequest;
 import com.api_coffee_store.api_coffee_store.dtos.request.IntrospectRequest;
+import com.api_coffee_store.api_coffee_store.dtos.response.AuthProfileResponse;
+import com.api_coffee_store.api_coffee_store.dtos.response.AuthenticationResponse;
 import com.api_coffee_store.api_coffee_store.enums.ErrorCode;
 import com.api_coffee_store.api_coffee_store.enums.SuccessCode;
 import com.api_coffee_store.api_coffee_store.exception.APIException;
@@ -19,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -63,18 +66,25 @@ public class AuthencationService {
     }
 
     public ResponseEntity<ResponseObject> authenticate(AuthenticationRequest authenticationRequest) throws APIException {
+        logger.info("Request Login: "+authenticationRequest.getEmail()+" "+authenticationRequest.getPassword());
         User user = userRepository.findByEmail(authenticationRequest.getEmail()).orElseThrow(()->new APIException(ErrorCode.EMAIL_NOT_EXISTS));
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         if (!passwordEncoder.matches(authenticationRequest.getPassword(),user.getPassword())) throw new APIException(ErrorCode.WRONG_PASSWORD);
 
         String token = generateToken(user);
-
+        logger.info("Log In Successfully: "+authenticationRequest.getEmail()+" "+authenticationRequest.getPassword());
         return ResponseEntity.status(SuccessCode.REQUEST.getHttpStatusCode()).body(
-            new ResponseObject(SuccessCode.REQUEST.getStatus(), "Log In Successfully",token)
+            new ResponseObject(SuccessCode.REQUEST.getStatus(), "Log In Successfully",new AuthenticationResponse(
+                    user.getId(),
+                    user.getFullname(),
+                    user.getCreatedAt(),
+                    token
+            ))
         );
 
     }
+
 
     public String generateToken(User user){
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
@@ -107,5 +117,25 @@ public class AuthencationService {
             user.getRoles().forEach(stringJoiner::add);
         }
         return stringJoiner.toString();
+    }
+
+    public ResponseEntity<ResponseObject> getProfile() throws APIException {
+        var context = SecurityContextHolder.getContext();
+        String name =  context.getAuthentication().getName();
+        User user = userRepository.findByEmail(name).orElseThrow(()->
+                new APIException(ErrorCode.USER_NOT_EXISTS));
+        return ResponseEntity.status(SuccessCode.REQUEST.getHttpStatusCode()).body(
+                ResponseObject.builder()
+                        .status(SuccessCode.REQUEST.getStatus())
+                        .message("Authenticated")
+                        .data(new AuthProfileResponse(
+                                user.getId(),
+                                user.getFullname(),
+                                user.getCreatedAt()
+                        ))
+                        .build()
+
+
+        );
     }
 }

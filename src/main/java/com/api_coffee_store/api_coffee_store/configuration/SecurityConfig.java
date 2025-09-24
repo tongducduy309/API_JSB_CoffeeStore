@@ -28,9 +28,10 @@ public class SecurityConfig {
     @Value("${jwt.secret}")
     private String SIGNER_KEY;
 
-    private final String[] PUBLIC_ENDPOINT_POST = {"/api/v1/auth/token","/api/v1/auth/introspect","/api/v1/users",
+    private final String[] PUBLIC_ENDPOINT_POST = {"/api/v1/auth/authenticate","/api/v1/auth/introspect","/api/v1/users",
     "/api/v1/reviews"};
-    private final String[] PUBLIC_ENDPOINT_GET = {"/api/v1/reviews","/api/v1/blogs/html/{slug}","/api/v1/products","/api/v1/blogs","/api/v1/files"};
+    private final String[] PUBLIC_ENDPOINT_GET = {"/api/v1/reviews","/api/v1/blogs/html/{slug}","/api/v1/products","/api/v1/blogs",
+            "/api/v1/files", "/api/v1/auth/me"};
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(request->

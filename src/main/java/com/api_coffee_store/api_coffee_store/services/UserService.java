@@ -3,6 +3,7 @@ package com.api_coffee_store.api_coffee_store.services;
 import com.api_coffee_store.api_coffee_store.dtos.response.UserResponse;
 import com.api_coffee_store.api_coffee_store.enums.ErrorCode;
 import com.api_coffee_store.api_coffee_store.enums.Role;
+import com.api_coffee_store.api_coffee_store.enums.SuccessCode;
 import com.api_coffee_store.api_coffee_store.exception.APIException;
 import com.api_coffee_store.api_coffee_store.mapper.UserMapper;
 import com.api_coffee_store.api_coffee_store.models.ResponseObject;
@@ -40,22 +41,34 @@ public class UserService {
 
         user.setRoles(roles);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                new ResponseObject(200,"Create User Successfully",userRepository.save(user))
+        return ResponseEntity.status(SuccessCode.CREATE.getHttpStatusCode()).body(
+                ResponseObject.builder()
+                        .status(SuccessCode.CREATE.getStatus())
+                        .message("Create User Successfully")
+                        .data(userRepository.save(user))
+                        .build()
         );
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseObject> getAllUsers(){
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject(200,"All Users",userMapper.toResponseList(userRepository.findAll()))
+                ResponseObject.builder()
+                        .status(SuccessCode.REQUEST.getStatus())
+                        .message("All Users")
+                        .data(userMapper.toResponseList(userRepository.findAll()))
+                        .build()
         );
     }
 
     public ResponseEntity<ResponseObject> getProfileByToken() throws APIException {
 
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject(200,"Profile",userMapper.toUserResponse(getProfile()))
+        return ResponseEntity.status(SuccessCode.REQUEST.getHttpStatusCode()).body(
+                ResponseObject.builder()
+                        .status(SuccessCode.REQUEST.getStatus())
+                        .message("Profile")
+                        .data(userMapper.toUserResponse(getProfile()))
+                        .build()
         );
     }
 
