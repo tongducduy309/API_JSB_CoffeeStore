@@ -1,5 +1,6 @@
 package com.api_coffee_store.api_coffee_store.configuration;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,24 +18,34 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.header.writers.CrossOriginEmbedderPolicyHeaderWriter;
+import org.springframework.security.web.header.writers.CrossOriginOpenerPolicyHeaderWriter;
+import org.springframework.security.web.header.writers.StaticHeadersWriter;
 
 import javax.crypto.spec.SecretKeySpec;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     @Value("${jwt.secret}")
     private String SIGNER_KEY;
 
+
     private final String[] PUBLIC_ENDPOINT_POST = {"/api/v1/auth/authenticate","/api/v1/auth/introspect","/api/v1/users",
-    "/api/v1/reviews"};
+    "/api/v1/reviews","/api/v1/auth/google", "/oauth2/**", "/actuator/**"};
     private final String[] PUBLIC_ENDPOINT_GET = {"/api/v1/reviews","/api/v1/blogs/html/{slug}","/api/v1/products","/api/v1/blogs",
             "/api/v1/files", "/api/v1/auth/me"};
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeHttpRequests(request->
+        httpSecurity
+                .headers(h -> h
+                        .crossOriginOpenerPolicy(coop -> coop.policy(CrossOriginOpenerPolicyHeaderWriter.CrossOriginOpenerPolicy.SAME_ORIGIN_ALLOW_POPUPS))
+                        .crossOriginEmbedderPolicy(coep -> coep.policy(CrossOriginEmbedderPolicyHeaderWriter.CrossOriginEmbedderPolicy.UNSAFE_NONE))
+                )
+                .authorizeHttpRequests(request->
                 request.requestMatchers(HttpMethod.POST,PUBLIC_ENDPOINT_POST).permitAll()
                         .requestMatchers(HttpMethod.GET,PUBLIC_ENDPOINT_GET).permitAll()
 //                        .requestMatchers(HttpMethod.GET,"/api/v1/users").hasRole(Role.ADMIN.name())
@@ -49,6 +60,8 @@ public class SecurityConfig {
 
         httpSecurity.cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable);
+
+
 
 
         return httpSecurity.build();

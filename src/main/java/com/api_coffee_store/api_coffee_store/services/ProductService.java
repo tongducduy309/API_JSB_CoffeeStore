@@ -61,7 +61,7 @@ public class ProductService {
                 ResponseObject.builder()
                         .status(SuccessCode.REQUEST.getStatus())
                         .message("Found Product With Id = "+id)
-                        .data(productRepository.findAll().getFirst())
+                        .data(product)
                         .build()
         );
     }
@@ -92,7 +92,8 @@ public class ProductService {
                 .httpStatusCode(ErrorCode.NOT_FOUND.getHttpStatusCode())
                 .build());
         try{
-            String generatedFileName = (newProduct.getImage().isEmpty())?"":storageService.storeFile(newProduct.getImage());
+
+            String generatedFileName = (newProduct.getImage()==null||newProduct.getImage().isEmpty())?"":storageService.storeFile(newProduct.getImage());
 
             Product product = Product.builder()
                     .name(newProduct.getName())
@@ -161,5 +162,7 @@ public class ProductService {
                 new ResponseObject(SuccessCode.NO_CONTENT.getStatus(), "Delete Product Successfully","")
         );
     }
+
+
 
 }

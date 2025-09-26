@@ -30,9 +30,9 @@ public class Review {
     @Column(length = 500)
     private String comment;
 
-    private String name;
-
-    private String email;
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "user_id", nullable = true)
+    private User user;
 //    private String customerId;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt= LocalDateTime.now();

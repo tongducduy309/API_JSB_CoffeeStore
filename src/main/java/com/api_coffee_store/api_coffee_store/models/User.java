@@ -34,6 +34,7 @@ public class User {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
     private Set<String> roles;
+    @Column(unique = true) private String googleSub;
 
     @PrePersist
     public void prePersist() {

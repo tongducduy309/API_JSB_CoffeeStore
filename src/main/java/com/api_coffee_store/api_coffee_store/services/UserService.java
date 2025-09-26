@@ -9,6 +9,7 @@ import com.api_coffee_store.api_coffee_store.mapper.UserMapper;
 import com.api_coffee_store.api_coffee_store.models.ResponseObject;
 import com.api_coffee_store.api_coffee_store.models.User;
 import com.api_coffee_store.api_coffee_store.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -75,7 +76,9 @@ public class UserService {
     public User getProfile() throws APIException {
         var context = SecurityContextHolder.getContext();
         String name =  context.getAuthentication().getName();
-        return userRepository.findByEmail(name).orElseThrow(()->
+        return userRepository.findById(name).orElseThrow(()->
                 new APIException(ErrorCode.USER_NOT_EXISTS));
     }
+
+
 }

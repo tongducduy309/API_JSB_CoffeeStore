@@ -24,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -73,9 +74,9 @@ public class AuthencationService {
         if (!passwordEncoder.matches(authenticationRequest.getPassword(),user.getPassword())) throw new APIException(ErrorCode.WRONG_PASSWORD);
 
         String token = generateToken(user);
-        logger.info("Log In Successfully: "+authenticationRequest.getEmail()+" "+authenticationRequest.getPassword());
+        logger.info("Login Successfully: "+authenticationRequest.getEmail()+" "+authenticationRequest.getPassword());
         return ResponseEntity.status(SuccessCode.REQUEST.getHttpStatusCode()).body(
-            new ResponseObject(SuccessCode.REQUEST.getStatus(), "Log In Successfully",new AuthenticationResponse(
+            new ResponseObject(SuccessCode.REQUEST.getStatus(), "Login Successfully",new AuthenticationResponse(
                     user.getId(),
                     user.getFullname(),
                     user.getCreatedAt(),
@@ -90,13 +91,14 @@ public class AuthencationService {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(user.getEmail())
-                .issuer("werewolf.com")
+                .subject(user.getId())
+                .issuer("coffee-store.com")
                 .issueTime(new Date())
                 .expirationTime(new Date(
                         Instant.now().plus(EXPIRATION_TOKEN, ChronoUnit.HOURS).toEpochMilli()
                 ))
                 .claim("scope",buildScope(user))
+                .claim("email", user.getEmail())
                 .build();
 
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
@@ -122,7 +124,7 @@ public class AuthencationService {
     public ResponseEntity<ResponseObject> getProfile() throws APIException {
         var context = SecurityContextHolder.getContext();
         String name =  context.getAuthentication().getName();
-        User user = userRepository.findByEmail(name).orElseThrow(()->
+        User user = userRepository.findById(name).orElseThrow(()->
                 new APIException(ErrorCode.USER_NOT_EXISTS));
         return ResponseEntity.status(SuccessCode.REQUEST.getHttpStatusCode()).body(
                 ResponseObject.builder()
@@ -136,6 +138,16 @@ public class AuthencationService {
                         .build()
 
 
+        );
+    }
+
+    public ResponseEntity<ResponseObject> loginWithGoogle(OAuth2User principal) {
+        return ResponseEntity.status(SuccessCode.REQUEST.getHttpStatusCode()).body(
+                ResponseObject.builder()
+                        .status(SuccessCode.REQUEST.getStatus())
+                        .message("Login With Google Successfully")
+                        .data(principal.getAttributes())
+                        .build()
         );
     }
 }
