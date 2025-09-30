@@ -24,8 +24,8 @@ import java.util.List;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
 
 
     @Column(name = "order_code", unique = true, length = 20)
@@ -48,11 +48,11 @@ public class Order {
     @Column(name = "payment_method", length = 20, nullable = false)
     private PaymentMethod paymentMethod;
 
-    private Double subtotal;
-    private Double shippingFee;
-    private Double discount;
-    private Double tax;
-    private Double total;
+    private long subtotal;
+    private long shippingFee;
+    private long discount;
+    private long tax;
+    private long total;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference

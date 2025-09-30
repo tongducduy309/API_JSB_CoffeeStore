@@ -76,7 +76,7 @@ public class UserService {
     public User getProfile() throws APIException {
         var context = SecurityContextHolder.getContext();
         String name =  context.getAuthentication().getName();
-        return userRepository.findById(name).orElseThrow(()->
+        return userRepository.findByEmail(name).orElseThrow(()->
                 new APIException(ErrorCode.USER_NOT_EXISTS));
     }
 

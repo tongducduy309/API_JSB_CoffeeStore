@@ -22,6 +22,7 @@ spring:
       maximumPoolSize: ${SPRING_DATASOURCE_HIKARI_MAXIMUMPOOLSIZE:5}
       minimumIdle: ${SPRING_DATASOURCE_HIKARI_MINIMUMIDLE:1}
 
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -35,3 +36,16 @@ management:
 jwt:
   secret: ${JWT_SECRET:change-me}
   expiration-ms: ${JWT_EXPIRATION_MS:8760}
+
+vnpay:
+  tmn_code: CHALFH6T
+  hash_secret: M3JW4B80139KD92UQO0GFEE2A9JT0ZYD
+  pay_url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+  return_url: http://localhost:4200/payments/vnpay/return
+#  ipn_url: https://caf-bay.vercel.app/payments/vnpay/ipn
+  ipn_url: https://api-jsb-coffeestore.onrender.com/api/v1/payments/vnpay/ipn
+  version: 2.1.0
+  command: pay
+  curr_code: VND
+  locale: vn
+  note_payment: ${NOTE_PAYMENT}

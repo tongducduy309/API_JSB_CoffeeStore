@@ -30,8 +30,8 @@ public class OrderItem {
     @JoinColumn(name = "product_variant_id")
     private ProductVariant productVariant;
     private Integer quantity;
-    private Double price;
-    private Double lineTotal;
+    private long price;
+    private long lineTotal;
     private Integer percentSale;
     private String note;
 }

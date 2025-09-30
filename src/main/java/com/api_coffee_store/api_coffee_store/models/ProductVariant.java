@@ -21,7 +21,7 @@ public class ProductVariant {
     private String id;
 
     private String size;
-    private Double price;
+    private long price;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)

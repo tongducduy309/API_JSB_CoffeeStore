@@ -35,9 +35,9 @@ public class SecurityConfig {
 
 
     private final String[] PUBLIC_ENDPOINT_POST = {"/api/v1/auth/authenticate","/api/v1/auth/introspect","/api/v1/users",
-    "/api/v1/reviews","/api/v1/auth/google", "/oauth2/**", "/actuator/**"};
+    "/api/v1/reviews","/api/v1/auth/google", "/api/v1/payments/**"};
     private final String[] PUBLIC_ENDPOINT_GET = {"/api/v1/reviews","/api/v1/blogs/html/{slug}","/api/v1/products","/api/v1/blogs",
-            "/api/v1/files", "/api/v1/auth/me"};
+            "/api/v1/files", "/api/v1/auth/me", "/api/v1/products/{id}", "/api/v1/reviews/product-id/{id}", "/api/v1/payments/**"};
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity

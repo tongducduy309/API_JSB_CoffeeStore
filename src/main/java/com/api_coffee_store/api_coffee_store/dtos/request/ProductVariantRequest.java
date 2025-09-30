@@ -9,6 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 public class ProductVariantRequest {
     private String size;
-    private Double price;
+    private long price;
     private boolean status;
 }

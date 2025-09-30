@@ -5,15 +5,15 @@ import java.util.List;
 
 public record CreateOrderResponse(
         String orderCode,
-        String orderId,
-        Double totalAmount,
+        Long orderId,
+        long totalAmount,
         LocalDateTime createdAt,
         List<Line> lines,
         String note
 ) {
     public record Line(String productId,
             String productVariantId,
-            Double price,
+            long price,
             Integer quantity,
             String note) {}
 }

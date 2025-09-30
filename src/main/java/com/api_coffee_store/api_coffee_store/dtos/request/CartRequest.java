@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class CartRequest {
-    private String productId;
+//    private String productId;
     private String productVariantId;
     private Integer quantity;
     private String note;

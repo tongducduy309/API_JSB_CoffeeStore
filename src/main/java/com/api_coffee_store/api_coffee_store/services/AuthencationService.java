@@ -47,7 +47,7 @@ public class AuthencationService {
     private int EXPIRATION_TOKEN;
 
     public ResponseEntity<ResponseObject> introspect(IntrospectRequest introspectRequest) throws ParseException, JOSEException {
-        System.out.println(SIGNER_KEY);
+//        System.out.println(SIGNER_KEY);
         String token = introspectRequest.getToken();
 
 
@@ -91,14 +91,13 @@ public class AuthencationService {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(user.getId())
+                .subject(user.getEmail())
                 .issuer("coffee-store.com")
                 .issueTime(new Date())
                 .expirationTime(new Date(
-                        Instant.now().plus(EXPIRATION_TOKEN, ChronoUnit.HOURS).toEpochMilli()
+                        Instant.now().plus((EXPIRATION_TOKEN), ChronoUnit.HOURS).toEpochMilli()
                 ))
                 .claim("scope",buildScope(user))
-                .claim("email", user.getEmail())
                 .build();
 
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
@@ -124,7 +123,7 @@ public class AuthencationService {
     public ResponseEntity<ResponseObject> getProfile() throws APIException {
         var context = SecurityContextHolder.getContext();
         String name =  context.getAuthentication().getName();
-        User user = userRepository.findById(name).orElseThrow(()->
+        User user = userRepository.findByEmail(name).orElseThrow(()->
                 new APIException(ErrorCode.USER_NOT_EXISTS));
         return ResponseEntity.status(SuccessCode.REQUEST.getHttpStatusCode()).body(
                 ResponseObject.builder()
@@ -133,7 +132,7 @@ public class AuthencationService {
                         .data(new AuthProfileResponse(
                                 user.getId(),
                                 user.getFullname(),
-                                user.getCreatedAt()
+                                user.getEmail()
                         ))
                         .build()
 

@@ -5,6 +5,6 @@ import java.time.LocalDateTime;
 public record AuthProfileResponse(
         String id,
         String fullname,
-        LocalDateTime createdAt
+        String email
 ) {
 }

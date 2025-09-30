@@ -4,14 +4,12 @@ import com.api_coffee_store.api_coffee_store.dtos.request.CreateOrderRequest;
 import com.api_coffee_store.api_coffee_store.exception.APIException;
 import com.api_coffee_store.api_coffee_store.models.ResponseObject;
 import com.api_coffee_store.api_coffee_store.services.OrderService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/v1/orders")
@@ -19,9 +17,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
 
     private final OrderService orderService;
+
+    @GetMapping
+    ResponseEntity<ResponseObject> getAllOrders(){
+        return orderService.getAllOrders();
+    }
     @PostMapping
-    ResponseEntity<ResponseObject> createOrder(
-           @Valid @RequestBody CreateOrderRequest createOrderRequest) throws APIException {
-        return orderService.createOrder(createOrderRequest);
+    ResponseEntity<?> createOrder(
+           @Valid @RequestBody CreateOrderRequest createOrderRequest, HttpServletRequest http) throws APIException {
+        return orderService.createOrder(createOrderRequest,http);
+    }
+
+    @GetMapping("/{id}/payment-status")
+    ResponseEntity<ResponseObject> getPaymentStatus(@PathVariable Long id) throws APIException {
+        return orderService.getPaymentStatus(id);
     }
 }

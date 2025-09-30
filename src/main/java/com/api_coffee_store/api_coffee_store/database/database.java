@@ -42,6 +42,7 @@ public class database {
 ////                        .category(categoryA)
 ////                        .build();
 ////                log.info("Insert Product",productRepository.save(productA));
+//
 //                Product productB = Product.builder()
 //                        .name("Trà Sữa Phúc Long B")
 //                        .variants(new ArrayList<>())

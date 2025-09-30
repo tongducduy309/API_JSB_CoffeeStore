@@ -29,6 +29,11 @@ public class CartController {
         return cartService.getMyCart();
     }
 
+    @GetMapping("/product")
+    ResponseEntity<ResponseObject> getDetailProduct(@RequestParam String productVariantId, @RequestParam Integer quantity, @RequestParam(required = false) String note) throws APIException {
+        return cartService.getDetailProduct(productVariantId,quantity,note);
+    }
+
     @DeleteMapping("/{id}")
     ResponseEntity<ResponseObject> deleteCart(@PathVariable String id){
         return cartService.removeCart(id);
@@ -38,5 +43,6 @@ public class CartController {
     ResponseEntity<ResponseObject> updateCart(@PathVariable String id,@RequestBody UpdateQuantityCartRequest cartPatchRequest) throws APIException {
         return cartService.updateCart(id,cartPatchRequest);
     }
+
 
 }

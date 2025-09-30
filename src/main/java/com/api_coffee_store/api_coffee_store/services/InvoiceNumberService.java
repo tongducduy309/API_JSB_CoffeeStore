@@ -33,7 +33,7 @@ public class InvoiceNumberService {
 
         Long val = repo.findNextVal(period);
         String six = String.format("%06d", val);
-        return "INV-" + period + "-" + six;
+        return period + six ;
     }
 }
 
