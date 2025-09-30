@@ -34,12 +34,12 @@ public class VnPayService {
 
         String responseCode = allParams.get("vnp_ResponseCode");
         String txnRef = allParams.get("vnp_TxnRef");
-//        log.info(responseCode);
+        log.info(valid+" "+txnRef+" "+responseCode);
 
         if (valid && "00".equals(responseCode)) {
+//            log.info(response.toString());
+            ResponseEntity<ResponseObject> response = orderService.updatePaymentStatus(new UpdatePaymentStatusReq(Long.parseLong(txnRef), PaymentStatus.PAID));
 
-            ResponseEntity<ResponseObject> response = orderService.updatePaymentStatus(new UpdatePaymentStatusReq(Long.getLong(txnRef), PaymentStatus.PAID));
-            log.info(response.toString());
         } else {
 
             orderService.updatePaymentStatus(new UpdatePaymentStatusReq(Long.getLong(txnRef), PaymentStatus.FAILED));

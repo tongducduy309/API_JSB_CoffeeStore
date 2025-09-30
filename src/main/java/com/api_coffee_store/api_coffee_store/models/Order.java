@@ -38,10 +38,12 @@ public class Order {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "order_status", length = 20)
+    @Builder.Default
     private OrderStatus orderStatus = OrderStatus.PENDING;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_status", length = 20)
+    @Builder.Default
     private PaymentStatus paymentStatus = PaymentStatus.UNPAID;
 
     @Enumerated(EnumType.STRING)
