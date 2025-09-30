@@ -41,7 +41,7 @@ vnpay:
   tmn_code: CHALFH6T
   hash_secret: M3JW4B80139KD92UQO0GFEE2A9JT0ZYD
   pay_url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
-  return_url: http://localhost:4200/payments/vnpay/return
+  return_url: ${RETURN_URL}
 #  ipn_url: https://caf-bay.vercel.app/payments/vnpay/ipn
   ipn_url: https://api-jsb-coffeestore.onrender.com/api/v1/payments/vnpay/ipn
   version: 2.1.0

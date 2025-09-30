@@ -11,6 +11,7 @@ import com.api_coffee_store.api_coffee_store.repositories.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderService {
@@ -141,7 +143,6 @@ public class OrderService {
     public ResponseEntity<ResponseObject> getPaymentStatus(long id) throws APIException {
         Order order = orderRepository.findById(id)
                 .orElseThrow(()->new APIException(ErrorCode.NOT_FOUND.getStatus(),"Cannot Found Order With Id = "+id,ErrorCode.NOT_FOUND.getHttpStatusCode()));
-
 
         return ResponseEntity.status(SuccessCode.REQUEST.getHttpStatusCode()).body(
                 ResponseObject.builder()
