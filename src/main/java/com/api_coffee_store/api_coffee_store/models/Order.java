@@ -60,7 +60,6 @@ public class Order {
     @JsonManagedReference
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @Builder.Default
     private List<OrderItem> orderItems = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)

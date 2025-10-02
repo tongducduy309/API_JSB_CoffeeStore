@@ -28,8 +28,20 @@ public class OrderController {
         return orderService.createOrder(createOrderRequest,http);
     }
 
+    @GetMapping("/{id}")
+    ResponseEntity<ResponseObject> getOrderById(@PathVariable Long id) throws APIException {
+        return orderService.getOrderById(id);
+    }
+
     @GetMapping("/{id}/payment-status")
     ResponseEntity<ResponseObject> getPaymentStatus(@PathVariable Long id) throws APIException {
         return orderService.getPaymentStatus(id);
     }
+
+    @GetMapping("/myorders")
+    ResponseEntity<ResponseObject> getMyOrder() throws APIException {
+        return orderService.getMyOrder();
+    }
+
+
 }

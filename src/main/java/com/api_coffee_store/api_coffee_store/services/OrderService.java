@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -30,11 +31,11 @@ public class OrderService {
 
     private final UserRepository userRepository;
 
-    private final ProductRepository productRepository;
-
     private final ProductVariantRepository productVariantRepository;
 
     private final InvoiceNumberService invoiceNumberService;
+
+    private final UserService userService;
 
     public ResponseEntity<ResponseObject> getAllOrders(){
         return ResponseEntity.status(SuccessCode.REQUEST.getHttpStatusCode()).body(
@@ -45,6 +46,16 @@ public class OrderService {
                         .build()
         );
     }
+
+    public ResponseEntity<ResponseObject> getMyOrder() throws APIException {
+        User user = userService.getProfile();
+        List<Order> orders = orderRepository.findAllByUserId(user.getId());
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(200,"List Orders Of User", orders)
+        );
+    }
+
+
 
 
     @Value("${vnpay.note_payment}") private String notePayment;
@@ -64,6 +75,13 @@ public class OrderService {
 
         List<OrderItem> orderItems = new ArrayList<>();
         List<CreateOrderResponse.Line> lines = new ArrayList<>();
+        String code = invoiceNumberService.nextInvoiceCode();
+        Order order = Order.builder()
+                .orderCode(code)
+                .orderType(req.orderType())
+                .paymentMethod(req.paymentMethod())
+                .user(user)
+                .build();
 
 
         long total = 0;
@@ -79,9 +97,11 @@ public class OrderService {
 
             var oi = OrderItem.builder()
                     .product(product)
+                    .productVariant(productVariant)
                     .quantity(it.quantity())
                     .price(unitPrice)
                     .lineTotal(lineTotal)
+                    .order(order)
                     .note(it.note())
                     .build();
             orderItems.add(oi);
@@ -91,17 +111,10 @@ public class OrderService {
             lines.add(new CreateOrderResponse.Line(
                     product.getId(),productVariant.getId(),unitPrice,it.quantity(),it.note()==null||it.note().isEmpty()?"":it.note()));
         }
-        String code = invoiceNumberService.nextInvoiceCode();
-        var order = Order.builder()
-                .orderCode(code)
-                .orderType(req.orderType())
-                .paymentMethod(req.paymentMethod())
-                .user(user)
-                .total(total)
-                .build();
 
+        order.setTotal(total);
+        order.setOrderItems(orderItems);
 
-        orderItems.forEach(order::addItem);
         orderRepository.save(order);
 
         String payUrl = vnPayUrlService.createPaymentUrl(
@@ -149,6 +162,19 @@ public class OrderService {
                         .status(SuccessCode.REQUEST.getStatus())
                         .message("Payment Status Value")
                         .data(order.getPaymentStatus())
+                        .build()
+        );
+    }
+
+    public ResponseEntity<ResponseObject> getOrderById(Long id) throws APIException {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(()->new APIException(ErrorCode.NOT_FOUND.getStatus(),"Cannot Found Order With Id = "+id,ErrorCode.NOT_FOUND.getHttpStatusCode()));
+
+        return ResponseEntity.status(SuccessCode.REQUEST.getHttpStatusCode()).body(
+                ResponseObject.builder()
+                        .status(SuccessCode.REQUEST.getStatus())
+                        .message("Found Order With Id = "+id)
+                        .data(order)
                         .build()
         );
     }
