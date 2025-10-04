@@ -113,8 +113,8 @@ public class CartService {
             cartRepository.deleteById(id);
 
         }
-        return ResponseEntity.status(SuccessCode.NO_CONTENT.getHttpStatusCode()).body(
-                new ResponseObject(SuccessCode.NO_CONTENT.getStatus(), "Remove Cart Successfully","")
+        return ResponseEntity.status(SuccessCode.REQUEST.getHttpStatusCode()).body(
+                new ResponseObject(SuccessCode.REQUEST.getStatus(), "Remove Cart Successfully","")
         );
     }
 

@@ -15,6 +15,7 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,7 @@ public class AuthencationService {
     @Value("${jwt.expiration-ms}")
     private int EXPIRATION_TOKEN;
 
+    @Transactional
     public ResponseEntity<ResponseObject> introspect(IntrospectRequest introspectRequest) throws ParseException, JOSEException {
 //        System.out.println(SIGNER_KEY);
         String token = introspectRequest.getToken();
@@ -66,6 +68,7 @@ public class AuthencationService {
         );
     }
 
+    @Transactional
     public ResponseEntity<ResponseObject> authenticate(AuthenticationRequest authenticationRequest) throws APIException {
         logger.info("Request Login: "+authenticationRequest.getEmail()+" "+authenticationRequest.getPassword());
         User user = userRepository.findByEmail(authenticationRequest.getEmail()).orElseThrow(()->new APIException(ErrorCode.EMAIL_NOT_EXISTS));
@@ -85,6 +88,7 @@ public class AuthencationService {
         );
 
     }
+
 
 
     public String generateToken(User user){
@@ -120,6 +124,7 @@ public class AuthencationService {
         return stringJoiner.toString();
     }
 
+    @Transactional
     public ResponseEntity<ResponseObject> getProfile() throws APIException {
         var context = SecurityContextHolder.getContext();
         String name =  context.getAuthentication().getName();
@@ -140,6 +145,7 @@ public class AuthencationService {
         );
     }
 
+    @Transactional
     public ResponseEntity<ResponseObject> loginWithGoogle(OAuth2User principal) {
         return ResponseEntity.status(SuccessCode.REQUEST.getHttpStatusCode()).body(
                 ResponseObject.builder()

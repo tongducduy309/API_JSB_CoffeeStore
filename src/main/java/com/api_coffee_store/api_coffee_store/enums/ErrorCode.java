@@ -23,6 +23,7 @@ public enum ErrorCode {
     CONFLICT(409,"Conflict", HttpStatus.CONFLICT),
     INTERNAL_SERVER_ERROR(500,"Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR),
 
+    UNPROCESSABLE_ENTITY(422,"Unprocessable Content",HttpStatus.UNPROCESSABLE_ENTITY),
     WRONG_PASSWORD(404,"Wrong Password", HttpStatus.NOT_FOUND),
 
     CANNOT_READ_IMAGE(500,"Cannot Read Image", HttpStatus.INTERNAL_SERVER_ERROR)
